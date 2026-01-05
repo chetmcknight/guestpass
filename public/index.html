@@ -79,51 +79,104 @@
                 size: auto;
             }
 
+            html,
             body {
+                height: 100vh !important;
+                width: 100vw !important;
+                margin: 0 !important;
+                padding: 0 !important;
                 background: white !important;
-                margin: 0;
-                padding: 0;
-                height: 100vh;
-                width: 100vw;
-                overflow: hidden;
-                /* Prevent multi-page printing due to hidden elements */
+                overflow: hidden !important;
             }
 
-            /* essential: remove elements from flow completely */
-            .no-print,
-            .fixed {
+            /* Hiding Strategy: Collapse elements fully instead of just hiding visibility */
+
+            /* 1. Hide direct children of body except the app container */
+            body>*:not(#app-container) {
                 display: none !important;
             }
 
-            /* Hide everything by default (fallback for anything not marked no-print) */
-            body * {
-                visibility: hidden;
+            /* 2. Style body to center the remaining app container */
+            body {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
 
-            /* Only make the card and its children visible */
-            #card-to-print,
-            #card-to-print * {
-                visibility: visible;
-            }
-
-            #card-to-print {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                width: 400px !important;
-                max-width: 90vw !important;
+            /* 3. Reset #app-container flow */
+            #app-container {
+                position: static !important;
+                width: auto !important;
+                max-width: none !important;
                 margin: 0 !important;
+                padding: 0 !important;
+                transform: none !important;
+                display: block !important;
+            }
+
+            /* 4. Hide siblings of #result-view inside app-container */
+            #app-container>*:not(#result-view) {
+                display: none !important;
+            }
+
+            /* 5. Reset #result-view flow */
+            #result-view {
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                animation: none !important;
+                width: auto !important;
+            }
+
+            /* 6. Hide siblings of card (like buttons) */
+            #result-view>*:not(#card-to-print) {
+                display: none !important;
+            }
+
+            /* 7. The Card Itself */
+            #card-to-print {
+                display: block !important;
+                visibility: visible !important;
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                transform: none !important;
+
+                margin: 0 auto !important;
+                width: 350px !important;
+                /* Slightly smaller to ensure fit */
+                max-width: 90vw !important;
+
                 border: 2px solid #000 !important;
-                box-shadow: none !important;
                 border-radius: 20px !important;
-                padding: 40px !important;
+                padding: 32px !important;
                 background: white !important;
                 color: black !important;
+                box-shadow: none !important;
 
-                /* Force background colors/images to print */
+                /* Prevent internal breaks */
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+            }
+
+            /* Text Color Overrides for Print Clarity */
+            #card-to-print h1,
+            #card-to-print h2,
+            #card-to-print h3,
+            #card-to-print p,
+            #card-to-print span,
+            #display-ssid {
+                color: black !important;
+                text-shadow: none !important;
+            }
+
+            /* Ensure the text container looks right */
+            #card-to-print .bg-gray-100 {
+                background-color: #f3f4f6 !important;
+                border: 1px solid #e5e7eb !important;
             }
         }
     </style>
